@@ -11,11 +11,16 @@ import Signed from "@/components/Signed";
 import SignedTeacher from "@/components/SignedTeacher";
 import Login from "@/components/Login";
 import EditPassword from "@/components/EditPassword";
-import Cookies from 'js-cookie';
-import cookie from '../util/cookie';
-Vue.use(cookie)
+import Code from "@/components/Code";
+import CodeTeacher from "@/components/CodeTeacher";
+import UserInfo from "@/components/UserInfo";
+import Cookies from "js-cookie";
+import cookie from "../util/cookie";
+import Scan from "@/components/Scan";
+import Register from "@/components/Register"
+Vue.use(cookie);
 Vue.use(Router);
-Vue.use(Cookies)
+Vue.use(Cookies);
 const router = new Router({
   routes: [
     {
@@ -46,7 +51,8 @@ const router = new Router({
     {
       path: "/classdetail",
       name: "Classdetail",
-      component: Classdetail
+      component: Classdetail,
+      meta: { keepAlive: true }
     },
     {
       path: "/classteacherdetail",
@@ -72,18 +78,41 @@ const router = new Router({
       path: "/editpassword",
       name: "EditPassword",
       component: EditPassword
+    },
+    {
+      path: "/code",
+      name: "Code",
+      component: Code
+    },
+    {
+      path: "/codeteacher",
+      name: "CodeTeacher",
+      component: CodeTeacher
+    },
+    {
+      path: "/userinfo",
+      name: "UserInfo",
+      component: UserInfo
+    },
+    {
+      path: "/scan",
+      name: "Scan",
+      component: Scan
+    },
+    {
+      path: "/register",
+      name: "Register",
+      component: Register
     }
   ]
 });
-// 挂载路由导航守卫
 router.beforeEach((to, from, next) => {
-  if (
-    to.path === "/login"
-  )
-    return next();
-  // 获取token
-  const tokenStr =cookie.getCookie('sid')
+  if ((to.path === "/login")||(to.path === "/register")) return next();
+  // const tokenStr =Cookies.get('sid')
+  const tokenStr = window.localStorage.getItem("sid");
+  // alert(tokenStr);
   if (!tokenStr) return next("/login");
+  if ((to.path === "/")&&(!tokenStr)) return next("/userinfo");
   next();
 });
 export default router;

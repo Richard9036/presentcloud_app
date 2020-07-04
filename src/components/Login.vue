@@ -1,15 +1,10 @@
 <template>
   <div>
-    <mt-header title>
-      <router-link to="/" slot="left">
-        <mt-button icon="back">返回</mt-button>
-      </router-link>
-    </mt-header>
     <div class="imgDiv">
       <img src="..\assets\logo.png" alt class="logo" />
     </div>
     <div class="operateDiv">
-      <mt-field label="用户名" placeholder="请输入用户名" v-model="loginForm.username" class="myinput"></mt-field>
+      <mt-field label="账号/手机号" placeholder="请输入用户名/手机号" v-model="loginForm.username" class="myinput"></mt-field>
       <mt-field
         label="密码"
         placeholder="请输入密码"
@@ -17,7 +12,7 @@
         v-model="loginForm.password"
         class="myinput"
       ></mt-field>
-      <div class="registerDiv">
+      <div class="registerDiv" @click="register()">
         <span>免费注册</span>
       </div>
       <mt-button type="primary" @click.native="login" size="large">登录</mt-button>
@@ -26,8 +21,8 @@
 </template>
 
 <script>
-import { MessageBox } from "mint-ui";
 import Cookies from "js-cookie";
+import { MessageBox } from "mint-ui";
 export default {
   data() {
     return {
@@ -38,6 +33,9 @@ export default {
     };
   },
   methods: {
+    register() {
+      this.$router.push("/register");
+    },
     async login() {
       var qs = require("qs");
       const { data: res } = await this.$axios.post(
@@ -50,13 +48,11 @@ export default {
         MessageBox("提示", "服务器错误");
       } else {
         MessageBox("提示", "登录成功");
-        // let loginInfo = {
-        //   token: res.token
-        // };
-        // this.cookie.setCookie(loginInfo, 30);
-        console.log(this.cookie.getCookie("sid"));
-        // window.localStorage.setItem("sid", res.token);
-        this.$router.push("/");
+
+        Cookies.set("sid", res.token);
+        // console.log(this.cookie.getCookie("sid"));
+        window.localStorage.setItem("sid", res.token);
+        this.$router.push("/userinfo");
       }
     }
   }

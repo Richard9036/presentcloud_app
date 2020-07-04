@@ -12,7 +12,9 @@ import less from "less";
 import axios from "axios";
 import Cookies from "js-cookie";
 import QS from "qs";
-import cookie from "./util/cookie"
+import cookie from "./util/cookie";
+import Back from "./util/back";
+
 Vue.prototype.cookie=cookie;
 Vue.prototype.$axios = axios;
 Vue.prototype.qs = QS;
@@ -25,11 +27,14 @@ Vue.config.productionTip = false;
 
 Vue.use(MintUI);
 
-axios.defaults.baseURL = "http://localhost:8080";
+// axios.defaults.baseURL = "http://localhost:8080";
+axios.defaults.baseURL = "http://47.115.117.97:8080";
+
 /* eslint-disable no-new */
 new Vue({
   el: "#app",
   router,
+  Back,
   components: { App },
   template: "<App/>"
 });
